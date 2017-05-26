@@ -1,0 +1,100 @@
+
+########################################################################
+#
+# Instantiation
+#
+########################################################################
+
+emu = PyEmu()
+emu = IDAPyEmu(stack_base=0x0, stack_size=0x0, heap_base=0x0, heap_size=0x0)
+emu = PydbgPyEmu(dbg)
+
+########################################################################
+#
+# Execution
+#
+########################################################################
+
+# Single Step
+emu.execute(steps=2)
+
+# Run from
+emu.execute(start=0x12345678)
+
+# Run to
+emu.execute(end=0x12345678)
+
+# Run from to
+emu.execute(start=0x12345678, end=0x9abcdef0)
+
+# Break (possibly useless)
+emu.set_breakpoint(0x12345678)
+
+# Break with handler (possibly useless)
+emu.set_breakpoint(0x12345678, my_breakpoint_handler)
+
+########################################################################
+#
+# Manipulation
+#
+########################################################################
+
+# Smart register setting "eax" "al" "ax" masks the value
+emu.set_register("eax", 0x1234567, name="counter")
+emu.get_register("ax")
+emu.get_register("counter")
+
+# Stack access
+emu.set_stack_variable(0x80, 0x12345678, name="var_80")
+emu.set_stack_argument(1, 0x12345678, name="count")
+
+emu.get_stack_argument(2)
+emu.get_stack_argument("count")
+
+emu.get_stack_variable(0x80)
+emu.get_stack_variable("var_80")
+
+# Memory access
+emu.get_memory(0x12345678, 4)
+emu.set_memory(0x12345678, "ABCDEFGHIJKLMNOP")
+emu.set_memory(0x12345678, 0x12345678, size=2)
+
+########################################################################
+#
+# Handlers
+#
+########################################################################
+
+# Low level handlers
+emu.set_register_handler("eax", my_register_handler)
+emu.set_library_handler("LoadLibrary", my_library_handler)
+emu.set_exception_handler("GP", my_exception_handler)
+emu.set_mnemonic_handler("jmp", my_instruction_handler)
+emu.set_opcode_handler(0xe9, my_opcode_handler)
+emu.set_memory_handler(0x41424344, my_memory_handler)
+emu.set_pc_handler(0x45464748, my_pc_handler)
+
+# High level handlers
+emu.set_memory_write_handler(my_memory_write_handler)
+emu.set_memory_read_handler(my_memory_read_handler)
+emu.set_memory_access_handler(my_memory_access_handler)
+
+emu.set_stack_write_handler(my_stack_write_handler)
+emu.set_stack_read_handler(my_stack_read_handler)
+emu.set_stack_access_handler(my_stack_access_handler)
+
+emu.set_heap_write_handler(my_heap_write_handler)
+emu.set_heap_read_handler(my_heap_read_handler)
+emu.set_heap_access_handler(my_heap_access_handler)
+
+########################################################################
+#
+# Misc
+#
+########################################################################
+
+# Execution logging
+emu.log(filehandle)
+
+# Debug printing logging
+emu.debug(1)
