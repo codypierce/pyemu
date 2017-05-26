@@ -393,7 +393,7 @@ class PyLinux:
     # initialize: called from the emulator to set up the environment this
     #             wont do anything...yet :(
     #
-    def initialize(self, stackbase, stacklimit, heapbase, heaplimit):
+    def initialize(self, emu, stackbase, stacklimit, heapbase, heaplimit):
         
         return True
     
